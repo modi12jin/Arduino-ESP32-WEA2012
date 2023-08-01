@@ -26,7 +26,7 @@ static const uint32_t screenWidth = 412;
 static const uint32_t screenHeight = 412;
 
 static lv_disp_draw_buf_t draw_buf;
-static lv_color_t buf[2][screenWidth * 40];
+static lv_color_t buf[2][screenWidth * 20];
 
 //显示刷新
 void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p) {
@@ -63,7 +63,7 @@ void setup() {
   touch.begin();
   lv_init();
 
-  lv_disp_draw_buf_init(&draw_buf, buf[0], buf[1], screenWidth * 40);
+  lv_disp_draw_buf_init(&draw_buf, buf[0], buf[1], screenWidth * 20);
 
   //初始化显示
   static lv_disp_drv_t disp_drv;
