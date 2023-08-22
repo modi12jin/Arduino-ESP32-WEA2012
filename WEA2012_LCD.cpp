@@ -1,6 +1,6 @@
-#include "SPD2010_LCD.h"
+#include "WEA2012_LCD.h"
 
-SPD2010_LCD::SPD2010_LCD(int8_t sck_pin, int8_t qspi_0_pin, int8_t qspi_1_pin, int8_t qspi_2_pin,
+WEA2012_LCD::WEA2012_LCD(int8_t sck_pin, int8_t qspi_0_pin, int8_t qspi_1_pin, int8_t qspi_2_pin,
                          int8_t qspi_3_pin, int8_t cs_pin, int8_t lcd_rst_pin)
 {
     _sck = sck_pin;
@@ -12,9 +12,9 @@ SPD2010_LCD::SPD2010_LCD(int8_t sck_pin, int8_t qspi_0_pin, int8_t qspi_1_pin, i
     _lcd_rst = lcd_rst_pin;
 }
 
-void SPD2010_LCD::begin()
+void WEA2012_LCD::begin()
 {
-    //复位引脚配置
+    // 复位引脚配置
     if (_lcd_rst != -1)
     {
         pinMode(_lcd_rst, OUTPUT);
@@ -41,7 +41,7 @@ void SPD2010_LCD::begin()
         .command_bits = 8,
         .address_bits = 24,
         .mode = 0,
-        .clock_speed_hz = SPI_MASTER_FREQ_40M,
+        .clock_speed_hz = SPI_MASTER_FREQ_80M,
         .spics_io_num = -1,
         // .spics_io_num = _cs,
         .flags = SPI_DEVICE_HALFDUPLEX,
@@ -66,7 +66,7 @@ void SPD2010_LCD::begin()
     }
 }
 
-void SPD2010_LCD::lcd_write_cmd(uint32_t cmd, uint8_t *data, uint32_t len)
+void WEA2012_LCD::lcd_write_cmd(uint32_t cmd, uint8_t *data, uint32_t len)
 {
     digitalWrite(_cs, 0);
     spi_transaction_t t;
@@ -92,7 +92,7 @@ void SPD2010_LCD::lcd_write_cmd(uint32_t cmd, uint8_t *data, uint32_t len)
     digitalWrite(_cs, 1);
 }
 
-void SPD2010_LCD::lcd_address_set(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
+void WEA2012_LCD::lcd_address_set(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
 {
     lcd_cmd_data_t t[3] = {
         {0x2a, {x1 >> 8, x1, x2 >> 8, x2}, 0x04},
@@ -106,7 +106,7 @@ void SPD2010_LCD::lcd_address_set(uint16_t x1, uint16_t y1, uint16_t x2, uint16_
     }
 }
 
-void SPD2010_LCD::lcd_PushColors(uint16_t x,
+void WEA2012_LCD::lcd_PushColors(uint16_t x,
                                  uint16_t y,
                                  uint16_t width,
                                  uint16_t high,
@@ -152,12 +152,12 @@ void SPD2010_LCD::lcd_PushColors(uint16_t x,
     digitalWrite(_cs, 1);
 }
 
-void SPD2010_LCD::lcd_fill(uint16_t xsta, uint16_t ysta, uint16_t xend, uint16_t yend, uint16_t color)
+void WEA2012_LCD::lcd_fill(uint16_t xsta, uint16_t ysta, uint16_t xend, uint16_t yend, uint16_t color)
 {
-  uint16_t w = xend - xsta;
-  uint16_t h = yend - ysta;
-  uint16_t *color_p = (uint16_t *)heap_caps_malloc(w * h * 2, MALLOC_CAP_8BIT);
-  memset(color_p, color, w * h * 2);
-  lcd_PushColors(xsta, ysta, w, h, color_p);
-  free(color_p);
+    uint16_t w = xend - xsta;
+    uint16_t h = yend - ysta;
+    uint16_t *color_p = (uint16_t *)heap_caps_malloc(w * h * 2, MALLOC_CAP_8BIT);
+    memset(color_p, color, w * h * 2);
+    lcd_PushColors(xsta, ysta, w, h, color_p);
+    free(color_p);
 }

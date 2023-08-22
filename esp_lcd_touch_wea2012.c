@@ -20,7 +20,7 @@
 #include "esp_lcd_panel_io.h"
 #include "esp_lcd_touch.h"
 
-static const char *TAG = "lcd_panel_touch_spd2010";
+static const char *TAG = "lcd_panel_touch_wea2012";
 
 typedef struct stTPSta_H
 {
@@ -96,7 +96,7 @@ static esp_err_t Read_TP_HDP_STA(esp_lcd_touch_handle_t tp, struct stTP_HDP_STA 
 static esp_err_t Read_FW_Version(esp_lcd_touch_handle_t tp);
 static esp_err_t TP_Read_Data(esp_lcd_touch_handle_t tp, struct stTP_Tocuh *Touch);
 
-esp_err_t lcd_panel_touch_new_i2c_spd2010(const esp_lcd_panel_io_handle_t io, const esp_lcd_touch_config_t *config, esp_lcd_touch_handle_t *tp)
+esp_err_t lcd_panel_touch_new_i2c_wea2012(const esp_lcd_panel_io_handle_t io, const esp_lcd_touch_config_t *config, esp_lcd_touch_handle_t *tp)
 {
     ESP_RETURN_ON_FALSE(io, ESP_ERR_INVALID_ARG, TAG, "Invalid io");
     ESP_RETURN_ON_FALSE(config, ESP_ERR_INVALID_ARG, TAG, "Invalid config");
@@ -104,46 +104,46 @@ esp_err_t lcd_panel_touch_new_i2c_spd2010(const esp_lcd_panel_io_handle_t io, co
 
     /* Prepare main structure */
     esp_err_t ret = ESP_OK;
-    esp_lcd_touch_handle_t spd2010 = calloc(1, sizeof(esp_lcd_touch_t));
-    ESP_GOTO_ON_FALSE(spd2010, ESP_ERR_NO_MEM, err, TAG, "Touch handle malloc failed");
+    esp_lcd_touch_handle_t wea2012 = calloc(1, sizeof(esp_lcd_touch_t));
+    ESP_GOTO_ON_FALSE(wea2012, ESP_ERR_NO_MEM, err, TAG, "Touch handle malloc failed");
 
     /* Communication interface */
-    spd2010->io = io;
+    wea2012->io = io;
     /* Only supported callbacks are set */
-    spd2010->read_data = read_data;
-    spd2010->get_xy = get_xy;
-    spd2010->del = del;
+    wea2012->read_data = read_data;
+    wea2012->get_xy = get_xy;
+    wea2012->del = del;
     /* Mutex */
-    spd2010->data.lock.owner = portMUX_FREE_VAL;
+    wea2012->data.lock.owner = portMUX_FREE_VAL;
     /* Save config */
-    memcpy(&spd2010->config, config, sizeof(esp_lcd_touch_config_t));
+    memcpy(&wea2012->config, config, sizeof(esp_lcd_touch_config_t));
 
     /* Prepare pin for touch interrupt */
-    if (spd2010->config.int_gpio_num != GPIO_NUM_NC) {
+    if (wea2012->config.int_gpio_num != GPIO_NUM_NC) {
         const gpio_config_t int_gpio_config = {
             .mode = GPIO_MODE_INPUT,
-            .pin_bit_mask = BIT64(spd2010->config.int_gpio_num)
+            .pin_bit_mask = BIT64(wea2012->config.int_gpio_num)
         };
         ESP_GOTO_ON_ERROR(gpio_config(&int_gpio_config), err, TAG, "GPIO intr config failed");
     }
     /* Prepare pin for touch controller reset */
-    if (spd2010->config.rst_gpio_num != GPIO_NUM_NC) {
+    if (wea2012->config.rst_gpio_num != GPIO_NUM_NC) {
         const gpio_config_t rst_gpio_config = {
             .mode = GPIO_MODE_OUTPUT,
-            .pin_bit_mask = BIT64(spd2010->config.rst_gpio_num)
+            .pin_bit_mask = BIT64(wea2012->config.rst_gpio_num)
         };
         ESP_GOTO_ON_ERROR(gpio_config(&rst_gpio_config), err, TAG, "GPIO reset config failed");
     }
     /* Reset controller */
-    ESP_GOTO_ON_ERROR(reset(spd2010), err, TAG, "Reset failed");
-    ESP_GOTO_ON_ERROR(Read_FW_Version(spd2010), err, TAG, "Read version failed");
+    ESP_GOTO_ON_ERROR(reset(wea2012), err, TAG, "Reset failed");
+    ESP_GOTO_ON_ERROR(Read_FW_Version(wea2012), err, TAG, "Read version failed");
 
-    *tp = spd2010;
+    *tp = wea2012;
 
     return ESP_OK;
 err:
-    if (spd2010) {
-        del(spd2010);
+    if (wea2012) {
+        del(wea2012);
     }
     ESP_LOGE(TAG, "Initialization failed!");
     return ret;

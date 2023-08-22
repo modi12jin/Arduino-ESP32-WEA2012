@@ -1,14 +1,14 @@
-#include "SPD2010_Touch.h"
+#include "WEA2012_Touch.h"
 #include "sdkconfig.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_err.h"
 #include "esp_log.h"
 #include "driver/i2c.h"
-#include "esp_lcd_touch_spd2010.h"
+#include "esp_lcd_touch_wea2012.h"
 
-#define CONFIG_LCD_HRES 412
-#define CONFIG_LCD_VRES 412
+#define CONFIG_LCD_HRES 356
+#define CONFIG_LCD_VRES 400
 
 static const char *TAG = "example";
 
@@ -18,7 +18,7 @@ esp_lcd_panel_io_handle_t tp_io_handle;
 uint16_t touch_strength[1];
 uint8_t touch_cnt = 0;
 
-SPD2010_Touch::SPD2010_Touch(int8_t sda_pin, int8_t scl_pin, int8_t rst_pin, int8_t int_pin)
+WEA2012_Touch::WEA2012_Touch(int8_t sda_pin, int8_t scl_pin, int8_t rst_pin, int8_t int_pin)
 {
     _sda = sda_pin;
     _scl = scl_pin;
@@ -26,7 +26,7 @@ SPD2010_Touch::SPD2010_Touch(int8_t sda_pin, int8_t scl_pin, int8_t rst_pin, int
     _int = int_pin;
 }
 
-void SPD2010_Touch::begin()
+void WEA2012_Touch::begin()
 {
     i2c_config_t i2c_conf = {
         .mode = I2C_MODE_MASTER,
@@ -40,7 +40,7 @@ void SPD2010_Touch::begin()
     ESP_ERROR_CHECK(i2c_param_config(I2C_NUM_0, &i2c_conf));
     ESP_ERROR_CHECK(i2c_driver_install(I2C_NUM_0, i2c_conf.mode, 0, 0, 0));
 
-    esp_lcd_panel_io_i2c_config_t tp_io_config = ESP_LCD_TOUCH_IO_I2C_SPD2010_CONFIG();
+    esp_lcd_panel_io_i2c_config_t tp_io_config = ESP_LCD_TOUCH_IO_I2C_WEA2012_CONFIG();
     ESP_LOGI(TAG, "Initialize touch IO (I2C)");
     ESP_ERROR_CHECK(esp_lcd_new_panel_io_i2c((esp_lcd_i2c_bus_handle_t)I2C_NUM_0, &tp_io_config, &tp_io_handle));
 
@@ -60,11 +60,11 @@ void SPD2010_Touch::begin()
         },
     };
 
-    ESP_LOGI(TAG, "Initialize touch controller SPD2010");
-    ESP_ERROR_CHECK(lcd_panel_touch_new_i2c_spd2010(tp_io_handle, &tp_cfg, &tp));
+    ESP_LOGI(TAG, "Initialize touch controller WEA2012");
+    ESP_ERROR_CHECK(lcd_panel_touch_new_i2c_wea2012(tp_io_handle, &tp_cfg, &tp));
 }
 
-bool SPD2010_Touch::getTouch(uint16_t *x, uint16_t *y)
+bool WEA2012_Touch::getTouch(uint16_t *x, uint16_t *y)
 {
     esp_lcd_touch_read_data(tp);
     bool touchpad_pressed = esp_lcd_touch_get_coordinates(tp, x, y, touch_strength, &touch_cnt, 1);
