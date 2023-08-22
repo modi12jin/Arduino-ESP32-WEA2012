@@ -8,6 +8,8 @@
 
 # QSPI屏幕_WEA2012转接板购买链接(包含屏幕)
 
+[购买链接](https://mall.bilibili.com/neul-next/index.html?page=mall-up_itemDetail&noTitleBar=1&itemsId=1103222126&from=items_share&msource=items_share)
+
 ![blibli](./images/MAGICSNAPSHOT_1692697889556.jpg)
 
 # 单独屏幕购买链接
