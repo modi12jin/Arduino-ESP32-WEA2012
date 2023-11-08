@@ -19,9 +19,9 @@ void WEA2012_LCD::begin()
     {
         pinMode(_lcd_rst, OUTPUT);
         digitalWrite(_lcd_rst, LOW);
-        delay(100);
+        delay(300);
         digitalWrite(_lcd_rst, HIGH);
-        delay(100);
+        delay(300);
     }
     pinMode(_cs, OUTPUT);
 
@@ -40,7 +40,7 @@ void WEA2012_LCD::begin()
     spi_device_interface_config_t dev_config = {
         .command_bits = 8,
         .address_bits = 24,
-        .mode = 0,
+        .mode = 3,
         .clock_speed_hz = SPI_MASTER_FREQ_80M,
         .spics_io_num = -1,
         // .spics_io_num = _cs,
@@ -53,16 +53,9 @@ void WEA2012_LCD::begin()
     const lcd_cmd_data_t *lcd_init = lcd_cmd_data;
     for (int i = 0; i < (sizeof(lcd_cmd_data) / sizeof(lcd_cmd_data_t)); i++)
     {
-        if (lcd_init[i].len == 0xff)
-        {
-            vTaskDelay(pdMS_TO_TICKS(100));
-        }
-        else
-        {
             lcd_write_cmd(lcd_init[i].cmd,
                           (uint8_t *)lcd_init[i].data,
                           lcd_init[i].len);
-        }
     }
 }
 

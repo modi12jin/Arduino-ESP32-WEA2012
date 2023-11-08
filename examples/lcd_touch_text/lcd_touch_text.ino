@@ -27,14 +27,14 @@ Serial.begin(115200);
 lcd.begin();
 pinMode(LED, OUTPUT);
 digitalWrite(LED, HIGH); //高电平
-touch.begin();
+// touch.begin();
 }
 
 void loop() {
-    FingerNum=touch.getTouch(&touchX,&touchY);
-    if(FingerNum){
-              Serial.printf("X:%d,Y:%d\n",touchX,touchY);
-    }
+    // FingerNum=touch.getTouch(&touchX,&touchY);
+    // if(FingerNum){
+    //           Serial.printf("X:%d,Y:%d\n",touchX,touchY);
+    // }
     
-    delay(200);
+    // delay(200);
 }

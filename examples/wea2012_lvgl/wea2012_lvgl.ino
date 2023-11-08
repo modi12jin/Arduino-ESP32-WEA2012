@@ -19,7 +19,7 @@
 #define LED 13 // 背光
 
 WEA2012_LCD lcd = WEA2012_LCD(QSPI_SCK, QSPI_0, QSPI_1, QSPI_2, QSPI_3, QSPI_CS, LCD_RST);
-WEA2012_Touch touch = WEA2012_Touch(I2C_SDA, I2C_SCL, TP_RST, TP_INT);
+// WEA2012_Touch touch = WEA2012_Touch(I2C_SDA, I2C_SCL, TP_RST, TP_INT);
 
 // 更改为您的屏幕分辨率
 static const uint32_t screenWidth = 356;  // 屏幕宽度
@@ -49,27 +49,27 @@ void lvgl_port_rounder_callback(struct _lv_disp_drv_t * disp_drv, lv_area_t * ar
 }
 
 // 读取触摸
-void my_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data)
-{
+// void my_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data)
+// {
 
-  bool touched;
-  uint16_t touchX, touchY;
+//   bool touched;
+//   uint16_t touchX, touchY;
 
-  touched = touch.getTouch(&touchX, &touchY);
+//   touched = touch.getTouch(&touchX, &touchY);
 
-  if (!touched)
-  {
-    data->state = LV_INDEV_STATE_REL;
-  }
-  else
-  {
-    data->state = LV_INDEV_STATE_PR;
+//   if (!touched)
+//   {
+//     data->state = LV_INDEV_STATE_REL;
+//   }
+//   else
+//   {
+//     data->state = LV_INDEV_STATE_PR;
 
-    // 设置坐标
-    data->point.x = touchX;
-    data->point.y = touchY;
-  }
-}
+//     // 设置坐标
+//     data->point.x = touchX;
+//     data->point.y = touchY;
+//   }
+// }
 
 void setup()
 {
@@ -77,7 +77,7 @@ void setup()
   lcd.begin();
   pinMode(LED, OUTPUT);
   digitalWrite(LED, HIGH); // 高电平
-  touch.begin();
+  // touch.begin();
   lv_init();
 
   lv_disp_draw_buf_init(&draw_buf, buf[0], buf[1], screenWidth * 20);
@@ -94,11 +94,11 @@ void setup()
   lv_disp_drv_register(&disp_drv);
 
   // 初始化输入设备驱动程序
-  static lv_indev_drv_t indev_drv;
-  lv_indev_drv_init(&indev_drv);
-  indev_drv.type = LV_INDEV_TYPE_POINTER;
-  indev_drv.read_cb = my_touchpad_read;
-  lv_indev_drv_register(&indev_drv);
+  // static lv_indev_drv_t indev_drv;
+  // lv_indev_drv_init(&indev_drv);
+  // indev_drv.type = LV_INDEV_TYPE_POINTER;
+  // indev_drv.read_cb = my_touchpad_read;
+  // lv_indev_drv_register(&indev_drv);
 
   lv_demo_widgets(); // 小部件
   // lv_demo_keypad_encoder(); //键盘编码器
